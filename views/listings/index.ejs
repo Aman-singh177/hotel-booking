@@ -1,0 +1,39 @@
+<% layout("/layouts/boilerplate") %>  
+    <h3>All Listings</h3>
+    <!--Jab user button click karta hai, ye form browser ko bolta hai:
+        GET request bhejo /listings/new route pe
+        Ye browser side ka kaam hai — sirf browser server ko ek request bhejta hai.
+    -->
+    <!-- Frontend (form):c
+    "Mujhe ek naya form page chahiye. Main /listings/new pe GET request bhej raha hoon."
+    Backend (server):
+    "Theek hai! Tumhe new.ejs dikhata hoon jisme tum naya listing bana sakte ho."
+    -->
+    <!-- Agar backend mein app.get("/listings/new") nahi likhoge to:
+        Browser request bhejega /listings/new pe
+        Server bolega: ❌ "Mujhe to nahi pata /listings/new kya hai" → 404 error
+    -->
+    <!-- we haver direclty linked it using navbar then no need to give again button -->
+    <!-- <form method="GET" action="/listings/new">
+        <button>Create new Listings</button>
+    </form> -->
+
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+        <% for(let listing of allListings){ %>
+            <a href="/listings/<%= listing._id %>" class="listing-link">
+                <div class="listing-card card"  >
+                    <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image">
+                    <div class="card-img-overlay">Can you see Overlay effect</div>
+                    <div class="card-body">
+                      <p class="card-text">
+                        <b> <%= listing.title %> </b><br>
+                        <!-- use bas listing.price likha hai   -->
+                        &#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> / night
+
+                      </p>
+                    </div>
+                </div>
+            </a> 
+        <% } %> 
+    </div>
+</body> 
