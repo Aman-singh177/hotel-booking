@@ -4,6 +4,7 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const {listingSchema, reviewSchema} = require("../schema.js");
 const ExpressError = require("../utils/ExpressError.js");
 const Listing = require("../models/listing.js");
+const {isLoggedIn} = require("../middleware.js");
 
 // ab isko hum as middleware pass kar skte hai 
 const validateListing = (req,res,next) => {
@@ -30,7 +31,7 @@ router.get("/", async (req,res) => {
 // New route // isko isliye show route ke upar likha hai kyuki show route
 //  walaa function isme new ko id samaj raha hai basically id ko dartabse mein 
 // search liya jaa raha haia aur woh mil nhi rahi hai ishiliye new route ko show se upar rakha hai 
-router.get("/new",(req,res) =>{
+router.get("/new", isLoggedIn, (req,res) =>{
     res.render("listings/new.ejs");
 })
 
@@ -63,7 +64,7 @@ router.get("/:id", wrapAsync(async (req,res) =>{
 //     }
 // })
 
-router.post("/", validateListing ,wrapAsync(async (req,res,next) =>{ 
+router.post("/", isLoggedIn, validateListing ,wrapAsync(async (req,res,next) =>{ 
     // client ki galti se server pe error aaya means ushne sahi se data nhi bheja
     // if(!req.body.listing){ // yeh dekh raha hai lisiting aaya ki nhi pyr uske andr sabhai ya nhi  woh nhi dekh raha 
     //     throw new ExpressError(400,"send valid data for listing");
@@ -84,7 +85,7 @@ router.post("/", validateListing ,wrapAsync(async (req,res,next) =>{
 }))
 
 // edit route
-router.get("/:id/edit", wrapAsync(async (req,res) => {
+router.get("/:id/edit", isLoggedIn, wrapAsync(async (req,res) => {
     // :id means → "this part of the URL is dynamic"
     // It's like a placeholder for any actual ID value.
     // Let’s say you have 3 listings in the database with these MongoDB IDs:
@@ -101,7 +102,7 @@ router.get("/:id/edit", wrapAsync(async (req,res) => {
 }))
 
 // Update route 
-router.put("/:id", validateListing ,wrapAsync(async (req,res) =>{
+router.put("/:id", isLoggedIn, validateListing ,wrapAsync(async (req,res) =>{
     let {id} = req.params;
     await Listing.findByIdAndUpdate(id, {...req.body.listing});
     res.redirect(`/listings/${id}`);
