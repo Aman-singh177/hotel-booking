@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/user.js");
 const wrapAsync = require("../utils/wrapAsync");
 const passport = require("passport");
+const {saveRedirectUrl} = require("../middleware.js");
 
 router.get("/signup", (req,res) => {
     res.render("users/signup.ejs");
@@ -32,17 +33,21 @@ router.get("/login", (req,res) => {
     res.render("users/login.ejs");
 });
 
-router.post("/login", 
+router.post("/login", saveRedirectUrl, 
     passport.authenticate("local",{
         failureRedirect: "/login",
         failureFlash: true,
     }),
     async (req,res) => {
-        res.send("Welcome to ApnaRoom, You logged in sucessfully!");
+        req.flash("Welcome to ApnaRoom, You logged in sucessfully!");
+        // redirectUrl key humne store kari hogi toh passport ishe delete kar dega
+        // yaha access karenge toh empty undefined value aaegi
+        let redirectUrl = res.locals.redirectUrl || "/listings";
+        res.redirect(redirectUrl);
     }
 );
 
-router.get("/logout", (req,res, next) =>{
+router.get("/logout", (req,res, next) => {
     // req.logout method ye apne aap ko leta hai as a parameter
     req.logout((err) => {
         if(err) {

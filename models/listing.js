@@ -26,7 +26,11 @@ const listingSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref : "Review", // jo hamara review model hai woh iske like refrence banega  
         }
-    ]
+    ],
+    owner: { // listing ka owner platform pe ek registered user bhi hona chahiye
+        type : Schema.Types.ObjectId,
+        ref : "User",
+    },
 });
 
 

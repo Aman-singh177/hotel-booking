@@ -40,11 +40,12 @@ router.get("/:id", wrapAsync(async (req,res) =>{
     // req.params is an object that contains the route parameters — the values 
     // captured from the URL when using route parameters like :id.
     let {id} = req.params;
-    const listing = await Listing.findById(id).populate("reviews");
+    const listing = await Listing.findById(id).populate("reviews").populate("owner");
     if(!listing){
         req.flash("error","Listing you requested for does not exists!");
         res.redirect("/listings"); 
     }
+    console.log(listing);
     res.render("listings/show.ejs",{listing});
 }))
 
@@ -79,6 +80,10 @@ router.post("/", isLoggedIn, validateListing ,wrapAsync(async (req,res,next) =>{
     // } 
     let listing = req.body.listing;
     let newListing = new Listing(listing);
+    // owner mein current user ki information save karna hai ab user ki info kaise save 
+    // kare ab hume pata hai ki jo request object hai usme passport by default user related
+    // information save karata hai kaha store karwata hai req.user._id ke andar.
+    newListing.owner = req.user._id;
     await newListing.save();
     req.flash("success","New Listing Added!");
     res.redirect("/listings");
