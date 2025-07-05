@@ -4,7 +4,7 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const {listingSchema, reviewSchema} = require("../schema.js");
 const ExpressError = require("../utils/ExpressError.js");
 const Listing = require("../models/listing.js");
-const {isLoggedIn} = require("../middleware.js");
+const {isLoggedIn, isOwner} = require("../middleware.js");
 
 // ab isko hum as middleware pass kar skte hai 
 const validateListing = (req,res,next) => {
@@ -44,8 +44,7 @@ router.get("/:id", wrapAsync(async (req,res) =>{
     if(!listing){
         req.flash("error","Listing you requested for does not exists!");
         res.redirect("/listings"); 
-    }
-    console.log(listing);
+    } 
     res.render("listings/show.ejs",{listing});
 }))
 
@@ -83,14 +82,14 @@ router.post("/", isLoggedIn, validateListing ,wrapAsync(async (req,res,next) =>{
     // owner mein current user ki information save karna hai ab user ki info kaise save 
     // kare ab hume pata hai ki jo request object hai usme passport by default user related
     // information save karata hai kaha store karwata hai req.user._id ke andar.
-    newListing.owner = req.user._id;
+    newListing.owner = req.user._id; 
     await newListing.save();
     req.flash("success","New Listing Added!");
     res.redirect("/listings");
 }))
 
 // edit route
-router.get("/:id/edit", isLoggedIn, wrapAsync(async (req,res) => {
+router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync(async (req,res) => {
     // :id means → "this part of the URL is dynamic"
     // It's like a placeholder for any actual ID value.
     // Let’s say you have 3 listings in the database with these MongoDB IDs:
@@ -107,14 +106,14 @@ router.get("/:id/edit", isLoggedIn, wrapAsync(async (req,res) => {
 }))
 
 // Update route 
-router.put("/:id", isLoggedIn, validateListing ,wrapAsync(async (req,res) =>{
+router.put("/:id", isLoggedIn, isOwner, validateListing ,wrapAsync(async (req,res) =>{
     let {id} = req.params;
     await Listing.findByIdAndUpdate(id, {...req.body.listing});
     res.redirect(`/listings/${id}`);
 }))
 
 // Delete Route
-router.delete("/:id", wrapAsync(async (req,res) => {
+router.delete("/:id", isOwner, wrapAsync(async (req,res) => {
     let {id} = req.params;
     let deletedlisting = await Listing.findByIdAndDelete(id);
     console.log(deletedlisting);
