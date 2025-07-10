@@ -1,3 +1,10 @@
+require('dotenv').config();
+if(process.env.NODE_ENV != "production"){
+    require("dotenv").config();
+}
+console.log(process.env.SECRET);
+// devlopment phase jisme project banate hai ----> dotenv ko devlopment phase mein 
+// use karte hai production phase mein use nhi karte hai 
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose'); 

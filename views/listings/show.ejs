@@ -34,14 +34,10 @@
             <% if(currUser){ %>
             <h4>Leave a review</h4>
             <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate class="needs-validation">
+                 
                 <div class="mb-3 mt-3">
                     <label for="rating" class="form-label">Rating</label> 
-                    <!-- review object banai jiske andar rating ki value ko input le rahe hai -->
-                    <input type="range" min="1" max="5" id="rating" name="review[rating]" class="form-range">
-                </div>
-                <div class="mb-3 mt-3">
-                    <label for="rating" class="form-label">Rating</label> 
-                    <!-- <fieldset class="starability-basic"> 
+                    <fieldset class="starability-basic"> 
                         <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked aria-label="No rating." />
                         <input type="radio" id="first-rate1" name="review[rating]" value="1" />
                         <label for="first-rate1" title="Terrible">1 star</label>
@@ -53,7 +49,7 @@
                         <label for="first-rate4" title="Very good">4 stars</label>
                         <input type="radio" id="first-rate5" name="review[rating]" value="5" />
                         <label for="first-rate5" title="Amazing">5 stars</label>
-                    </fieldset> -->
+                    </fieldset>
                 </div>
                 <div class="mb-3 mt-3">
                     <!-- yeh ho gai client side validation postman se server side se bhej skte hai galt review -->
