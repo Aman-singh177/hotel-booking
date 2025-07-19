@@ -10,7 +10,7 @@ const listingSchema = new Schema({
     description : String,
     image: {
         filename: String,
-        url: String
+        url: String,
     },
     // image : {
     //     type : String,

@@ -41,12 +41,16 @@ module.exports.createListing = async (req,res,next) =>{
     // if(result.error){
     //     throw new ExpressError(400,result.error);
     // } 
+    let url = req.file.path;
+    let filename = req.file.filename;
+    console.log(url,"....",filename);
     let listing = req.body.listing;
     let newListing = new Listing(listing);
     // owner mein current user ki information save karna hai ab user ki info kaise save 
     // kare ab hume pata hai ki jo request object hai usme passport by default user related
     // information save karata hai kaha store karwata hai req.user._id ke andar.
     newListing.owner = req.user._id; 
+    newListing.image = {filename,url};
     await newListing.save();
     req.flash("success","New Listing Added!");
     res.redirect("/listings");

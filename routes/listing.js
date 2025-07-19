@@ -4,8 +4,10 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const Listing = require("../models/listing.js");
 const {isLoggedIn, isOwner, validateListing} = require("../middleware.js");
 
-const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const multer  = require('multer');
+// const upload = multer({ dest: 'uploads/' });
+const {storage} = require("../cloudConfig.js");
+const upload = multer({storage})
 const listingController = require("../controllers/listing.js");
 
 
@@ -18,14 +20,15 @@ router.get("/new", isLoggedIn,  listingController.renderNewForm);
 router
     .route("/")
     .get(wrapAsync(listingController.index))
-    // .post(
-    //     isLoggedIn,
-    //     validateListing,
-    //     wrapAsync(listingController.createListing)
-    // );
-    .post( upload.single('listing[image][url]'), (req,res) =>{
-        res.send(req.file);
-    }) 
+    .post(
+        isLoggedIn,
+        upload.single('listing[image][url]'),
+        validateListing,
+        wrapAsync(listingController.createListing)
+    );
+    // .post( upload.single('listing[image][url]'), (req,res) =>{
+    //     res.send(req.file);
+    // }) 
 
 // iche waaley dono ki jagah yeh likha hai
 
