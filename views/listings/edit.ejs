@@ -10,20 +10,24 @@
             Now inside your edit.ejs file, youre using this listing object to pre-fill the form:
             Note :::::: value="<= listing.title %>" → this will put the current title from MongoDB into the input field.value="<= listing.title %>" → this will put the current title from MongoDB into the input field.    
         -->
-        <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation">
+        <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
                 <input name="listing[title]" value="<%= listing.title %>" type="text" required class="form-control"/>
             </div>
-             
+              
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
                 <textarea name="listing[description]" required class="form-control" value="<%= listing.description %> " ></textarea>
             </div>
             <div class="mb-3">
-                <label for="image" class="form-label">Image Link</label>
-                <input name="listing[image][url]" required value="<%= listing.image?.url %>" type="text" class="form-control">
+                Original Listing Image <br> 
+                <img src="<%= originalImageUrl %>" />
             </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Upload New Image</label>
+                <input name="listing[image][url]" type="file" class="form-control">
+            </div> 
             <div class="row">
                 <div class="mb-3 col-md-4">
                     <label for="price" class="form-label">Price</label>

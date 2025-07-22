@@ -12,6 +12,7 @@ const listingSchema = new Schema({
         filename: String,
         url: String,
     },
+    // if you wanna set default image 
     // image : {
     //     type : String,
     //     default : "https://plus.unsplash.com/premium_photo-1683910767532-3a25b821f7ae?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZnJlZSUyMGltYWdlc3xlbnwwfHwwfHx8MA%3D%3D",
